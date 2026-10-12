@@ -2,7 +2,6 @@ package com.ecommerce.ecommerceapi.controller;
 
 import com.ecommerce.ecommerceapi.model.Category;
 import com.ecommerce.ecommerceapi.service.CategoryService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +39,7 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("/public/categories/{categoryId}")
+    @PutMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable Long categoryId) {
         try {
             categoryService.updateCategory(categoryId, category);
