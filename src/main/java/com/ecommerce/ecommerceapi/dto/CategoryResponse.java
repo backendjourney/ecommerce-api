@@ -1,4 +1,4 @@
-package com.ecommerce.ecommerceapi.dtos;
+package com.ecommerce.ecommerceapi.dto;
 
 public record CategoryResponse(
         Long categoryId,

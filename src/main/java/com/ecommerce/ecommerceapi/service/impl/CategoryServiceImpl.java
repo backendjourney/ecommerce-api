@@ -1,7 +1,7 @@
 package com.ecommerce.ecommerceapi.service.impl;
 
-import com.ecommerce.ecommerceapi.dtos.CategoryRequest;
-import com.ecommerce.ecommerceapi.dtos.CategoryResponse;
+import com.ecommerce.ecommerceapi.dto.CategoryRequest;
+import com.ecommerce.ecommerceapi.dto.CategoryResponse;
 import com.ecommerce.ecommerceapi.exception.APIException;
 import com.ecommerce.ecommerceapi.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerceapi.mapper.CategoryMapper;
@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(readOnly = true)
     @Override
     public List<CategoryResponse> getAllCategories() {
-        return categoryMapper.toReponseList(categoryRepository.findAll());
+        return categoryMapper.toResponseList(categoryRepository.findAll());
     }
 
     @Transactional
@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         boolean isCategoryNameExisting = categoryRepository.existsByCategoryNameIgnoreCase(categoryRequest.categoryName());
         if (isCategoryNameExisting) {
-            throw new APIException("Category already exists");
+            throw new APIException("Category name  already exists");
         }
         Category category = categoryMapper.toEntity(categoryRequest);
         Category savedCategory = categoryRepository.save(category);

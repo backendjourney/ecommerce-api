@@ -1,7 +1,7 @@
 package com.ecommerce.ecommerceapi.mapper;
 
-import com.ecommerce.ecommerceapi.dtos.CategoryRequest;
-import com.ecommerce.ecommerceapi.dtos.CategoryResponse;
+import com.ecommerce.ecommerceapi.dto.CategoryRequest;
+import com.ecommerce.ecommerceapi.dto.CategoryResponse;
 import com.ecommerce.ecommerceapi.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,7 +14,7 @@ import java.util.List;
 public interface CategoryMapper {
     CategoryResponse toResponse(Category category);
 
-    List<CategoryResponse> toReponseList(List<Category> categories);
+    List<CategoryResponse> toResponseList(List<Category> categories);
 
     @Mapping(target = "categoryId", ignore = true)
     Category toEntity(CategoryRequest request);
