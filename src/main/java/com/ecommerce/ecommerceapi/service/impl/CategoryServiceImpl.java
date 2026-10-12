@@ -6,10 +6,8 @@ import com.ecommerce.ecommerceapi.model.Category;
 import com.ecommerce.ecommerceapi.repository.CategoryRepository;
 import com.ecommerce.ecommerceapi.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,9 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-
     private final CategoryRepository categoryRepository;
-
 
     @Transactional(readOnly = true)
     @Override
@@ -30,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void createCategory(Category category) {
-        boolean isCategoryNameExisting = categoryRepository.existsByCategoryNameContainingIgnoreCase(category.getCategoryName());
+        boolean isCategoryNameExisting = categoryRepository.existsByCategoryNameIgnoreCase(category.getCategoryName());
         if (isCategoryNameExisting) {
             throw new APIException("Category already exists");
         }

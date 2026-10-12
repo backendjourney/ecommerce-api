@@ -13,20 +13,20 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> methodArgumentNotValiedException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Map<String, String>> handleValidationError(MethodArgumentNotValidException e) {
         Map<String, String> response = new HashMap<>();
         e.getBindingResult().getFieldErrors().forEach((error) -> response.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> resourceNotFoundException(ResourceNotFoundException e) {
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException e) {
         String message = e.getMessage();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(APIException.class)
-    public ResponseEntity<String> apiException(APIException e) {
+    public ResponseEntity<String> handleApiException(APIException e) {
         String message = e.getMessage();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
