@@ -1,5 +1,7 @@
 package com.ecommerce.ecommerceapi.service.impl;
 
+import com.ecommerce.ecommerceapi.exception.APIException;
+import com.ecommerce.ecommerceapi.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerceapi.model.Category;
 import com.ecommerce.ecommerceapi.repository.CategoryRepository;
 import com.ecommerce.ecommerceapi.service.CategoryService;
@@ -28,6 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void createCategory(Category category) {
+        boolean isCategoryNameExisting = categoryRepository.existsByCategoryNameContainingIgnoreCase(category.getCategoryName());
+        if (isCategoryNameExisting) {
+            throw new APIException("Category already exists");
+        }
         categoryRepository.save(category);
 
     }
@@ -36,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category with id: " + categoryId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "category id", categoryId));
         categoryRepository.delete(category);
         return "Category with id: " + categoryId + " has been deleted";
     }
@@ -45,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category updateCategory(Long categoryId, Category category) {
         Category existingCategory = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category with id: " + categoryId + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "category id", categoryId));
         existingCategory.setCategoryName(category.getCategoryName());
         return existingCategory;
     }
