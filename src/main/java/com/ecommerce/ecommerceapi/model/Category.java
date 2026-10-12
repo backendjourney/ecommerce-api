@@ -2,19 +2,18 @@ package com.ecommerce.ecommerceapi.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "categories")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
-    @NotBlank(message = "Kategori adi bos birakilamaz.")
+    @NotBlank(message = "Category name must not be blank")
     private String categoryName;
 }
