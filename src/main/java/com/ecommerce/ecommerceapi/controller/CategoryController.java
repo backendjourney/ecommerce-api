@@ -1,5 +1,7 @@
 package com.ecommerce.ecommerceapi.controller;
 
+import com.ecommerce.ecommerceapi.dtos.CategoryRequest;
+import com.ecommerce.ecommerceapi.dtos.CategoryResponse;
 import com.ecommerce.ecommerceapi.model.Category;
 import com.ecommerce.ecommerceapi.service.CategoryService;
 import jakarta.validation.Valid;
@@ -18,25 +20,23 @@ public class CategoryController {
 
 
     @GetMapping("/public/categories")
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
-        categoryService.createCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Category created successfully");
+    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryRequest));
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        String status = categoryService.deleteCategory(categoryId);
-        return ResponseEntity.ok(status);
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@Valid @RequestBody Category category, @PathVariable Long categoryId) {
-        categoryService.updateCategory(categoryId, category);
-        return ResponseEntity.ok("Category updated successfully , category id : " + categoryId);
+    public ResponseEntity<CategoryResponse> updateCategory(@Valid @RequestBody CategoryRequest categoryRequest, @PathVariable Long categoryId) {
+        return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryRequest));
     }
 }
