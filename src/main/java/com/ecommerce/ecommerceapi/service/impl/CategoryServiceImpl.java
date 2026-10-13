@@ -2,6 +2,7 @@ package com.ecommerce.ecommerceapi.service.impl;
 
 import com.ecommerce.ecommerceapi.dto.CategoryRequest;
 import com.ecommerce.ecommerceapi.dto.CategoryResponse;
+import com.ecommerce.ecommerceapi.dto.PageResponse;
 import com.ecommerce.ecommerceapi.exception.APIException;
 import com.ecommerce.ecommerceapi.exception.ResourceNotFoundException;
 import com.ecommerce.ecommerceapi.mapper.CategoryMapper;
@@ -9,10 +10,13 @@ import com.ecommerce.ecommerceapi.model.Category;
 import com.ecommerce.ecommerceapi.repository.CategoryRepository;
 import com.ecommerce.ecommerceapi.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +27,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<CategoryResponse> getAllCategories() {
-        return categoryMapper.toResponseList(categoryRepository.findAll());
+    public PageResponse<CategoryResponse> getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+        return PageResponse.from(categoryPage.map(categoryMapper::toResponse));
     }
 
     @Transactional
