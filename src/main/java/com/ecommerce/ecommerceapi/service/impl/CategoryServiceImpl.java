@@ -17,10 +17,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("categoryId", "categoryName");
+
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
@@ -28,6 +33,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<CategoryResponse> getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            throw new APIException("Invalid sort field: " + sortBy);
+        }
+
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
